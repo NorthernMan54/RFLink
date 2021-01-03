@@ -144,7 +144,7 @@ boolean Plugin_037(byte function, char *string)
    {
       temperature = data[0];
    }
-   temperature = ((temperature - 32) * 5 / 9 * 10);   // ACURITE sensors are in Farenheit
+   temperature = ((temperature - 32) * 10 * 5 / 9 );   // ACURITE sensors are in Farenheit
    // Serial.print("temperature: ");
    // Serial.println(temperature);
    if ( temperature < 0 ) 
@@ -180,7 +180,7 @@ boolean Plugin_037(byte function, char *string)
    display_Header();
    display_Name(PSTR("AcuRite 986"));
    char c_ID[5];
-   sprintf(c_ID, "%02x%02x", (rc & 0xFF), rc2);
+   sprintf(c_ID, "%02lx%02x", (rc & 0xFF), rc2);
    display_IDc(c_ID);
    display_TEMP(temperature);
    display_BAT(battery);
