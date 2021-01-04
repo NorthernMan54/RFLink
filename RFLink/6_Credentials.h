@@ -11,11 +11,11 @@
 #include "RFLink.h"
 
 // local AP
-String WIFI_SSID = "xxx";
-String WIFI_PSWD = "xxx";
+String WIFI_SSID = "67 Bonacres";
+String WIFI_PSWD = "brownieg";
 
 // DHCP or Static IP
-// #define USE_DHCP
+#define USE_DHCP
 #ifndef USE_DHCP
 String WIFI_IP = "192.168.1.xxx";
 String WIFI_DNS = "192.168.1.xxx";
@@ -24,16 +24,16 @@ String WIFI_SUBNET = "255.255.255.0";
 #endif
 
 // MQTT Server
-String MQTT_SERVER = "192.168.1.xxx";
+String MQTT_SERVER = "mqtt.local";
 String MQTT_PORT = "1883";
-String MQTT_ID = "ESP8266-RFLink_xxx";
+String MQTT_ID = "ESP8266-RFLink_001";
 String MQTT_USER = "xxx";
 String MQTT_PSWD = "xxx";
 
 // MQTT Topic
-String MQTT_TOPIC_OUT = "/ESP00/msg";
-String MQTT_TOPIC_IN = "/ESP00/cmd";
-String MQTT_TOPIC_LWT = "/ESP00/lwt";
+String MQTT_TOPIC_OUT = "RFLink/msg";
+String MQTT_TOPIC_IN = "RFLink/cmd";
+String MQTT_TOPIC_LWT = "RFLink/lwt";
 
 #ifdef CHECK_CACERT
 static const char ca_cert[] PROGMEM = R"EOF(

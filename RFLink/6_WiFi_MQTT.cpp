@@ -6,7 +6,9 @@
 // ************************************* //
 
 #include <Arduino.h>
-// #include <ArduinoOTA.h>
+#ifdef ARDUINO_OTA
+  #include <ARDUINO_OTA.h>
+#endif
 #include "RFLink.h"
 #include "3_Serial.h"
 #include "4_Display.h"
@@ -85,7 +87,7 @@ void start_WIFI()
   Serial.print(F("WiFi RSSI :\t\t"));
   Serial.println(WiFi.RSSI());
 
-  /*
+  #ifdef ARDUINO_OTA
   ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH)
@@ -116,7 +118,7 @@ void start_WIFI()
       Serial.println("End Failed");
   });
   ArduinoOTA.begin();
-  */
+  #endif
 }
 
 void stop_WIFI()
@@ -235,7 +237,9 @@ void checkMQTTloop()
     MQTTClient.loop();
     lastCheck = millis();
   }
-  // ArduinoOTA.handle();
+  #ifdef ARDUINO_OTA
+  ArduinoOTA.handle();
+  #endif
 }
 
 #else // MQTT_ENABLED

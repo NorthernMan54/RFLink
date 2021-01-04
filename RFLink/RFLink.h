@@ -22,6 +22,8 @@
 // WIFI
 #define WIFI_PWR_0 20 // 0~20.5dBm
 
+#define ARDUINOOTA true
+
 // MQTT messages
 #define MQTT_ENABLED          // Send RFLink messages over MQTT
 #define MQTT_LOOP_MS 1000     // MQTTClient.loop(); call period (in mSec)
@@ -34,7 +36,7 @@
 // Debug default
 #define RFDebug_0 false   // debug RF signals with plugin 001 (no decode)
 #define QRFDebug_0 false  // debug RF signals with plugin 001 but no multiplication (faster?, compact)
-#define RFUDebug_0 false  // debug RF signals with plugin 254 (decode 1st)
+#define RFUDebug_0 true  // debug RF signals with plugin 254 (decode 1st)
 #define QRFUDebug_0 false // debug RF signals with plugin 254 but no multiplication (faster?, compact)
 
 void CallReboot(void);

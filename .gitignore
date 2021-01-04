@@ -1,4 +1,8 @@
 .pio
 .vscode
+.gitignore
 pictures/Full size/
+
+RFLink/6_Credentials.h
+
 RFLink/6_Credentials.h
