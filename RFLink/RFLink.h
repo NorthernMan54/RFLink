@@ -22,7 +22,7 @@
 // WIFI
 #define WIFI_PWR_0 20 // 0~20.5dBm
 
-#define ARDUINOOTA true
+#define ARDUINO_OTA true
 
 // MQTT messages
 #define MQTT_ENABLED          // Send RFLink messages over MQTT

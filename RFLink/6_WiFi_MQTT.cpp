@@ -6,14 +6,14 @@
 // ************************************* //
 
 #include <Arduino.h>
-#ifdef ARDUINO_OTA
-  #include <ARDUINO_OTA.h>
-#endif
 #include "RFLink.h"
 #include "3_Serial.h"
 #include "4_Display.h"
 #include "6_WiFi_MQTT.h"
 #include "6_Credentials.h"
+#ifdef ARDUINO_OTA
+  #include <ArduinoOTA.h>
+#endif
 
 #ifdef ESP32
 #include <WiFi.h>
@@ -117,6 +117,7 @@ void start_WIFI()
     else if (error == OTA_END_ERROR)
       Serial.println("End Failed");
   });
+  Serial.println(F("Arduino OTA :\t\tEnabled"));
   ArduinoOTA.begin();
   #endif
 }

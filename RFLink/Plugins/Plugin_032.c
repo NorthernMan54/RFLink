@@ -41,7 +41,7 @@
  \*********************************************************************************************/
 #define ALECTOV4_PLUGIN_ID 032
 #define PLUGIN_DESC_032 "Alecto V4"
-#define ALECTOV4_PULSECOUNT 74
+#define ALECTOV4_PULSECOUNT 70
 
 #define ALECTOV4_MIDHI 550 / RAWSIGNAL_SAMPLE_RATE
 #define ALECTOV4_PULSEMIN 1500 / RAWSIGNAL_SAMPLE_RATE
@@ -53,7 +53,7 @@
 
 boolean Plugin_032(byte function, char *string)
 {
-   if (RawSignal.Number < ALECTOV4_PULSECOUNT || RawSignal.Number > (ALECTOV4_PULSECOUNT + 4))
+   if (RawSignal.Number < ALECTOV4_PULSECOUNT || RawSignal.Number > (ALECTOV4_PULSECOUNT + 8))
       return false;
 
    unsigned long bitstream = 0L;
@@ -66,33 +66,37 @@ boolean Plugin_032(byte function, char *string)
    // Get all 36 bits
    //==================================================================================
    byte start = 0;
+   if (RawSignal.Number == (ALECTOV4_PULSECOUNT + 8))
+      start = 8;
+   if (RawSignal.Number == (ALECTOV4_PULSECOUNT + 6))
+      start = 6;
    if (RawSignal.Number == (ALECTOV4_PULSECOUNT + 4))
       start = 4;
    if (RawSignal.Number == (ALECTOV4_PULSECOUNT + 2))
       start = 2;
 
-   for (byte x = 2 + start; x <= 56 + start; x += 2)
+   for (byte x = start; x < 54 + start; x += 2)
    { // Get first 28 bits
       if (RawSignal.Pulses[x + 1] > ALECTOV4_MIDHI)
          return false;
-
+    
       bitstream <<= 1; // Always shift
       if (RawSignal.Pulses[x] > ALECTOV4_PULSEMAXMIN)
          bitstream |= 0x1;
       else
       {
          if (RawSignal.Pulses[x] < ALECTOV4_PULSEMIN)
-            return false;
+           return false;
          if (RawSignal.Pulses[x] > ALECTOV4_PULSEMINMAX)
             return false;
          // bitstream |= 0x0;
       }
    }
 
-   for (byte x = 58 + start; x <= 72 + start; x = x + 2)
+   for (byte x = 54 + start; x < 70 + start; x = x + 2)
    { // Get remaining 8 bits
       if (RawSignal.Pulses[x + 1] > ALECTOV4_MIDHI)
-         return false;
+           return false;
 
       humidity <<= 1; // Always shift
       if (RawSignal.Pulses[x] > ALECTOV4_PULSEMAXMIN)
@@ -100,9 +104,9 @@ boolean Plugin_032(byte function, char *string)
       else
       {
          if (RawSignal.Pulses[x] < ALECTOV4_PULSEMIN)
-            return false;
+           return false;
          if (RawSignal.Pulses[x] > ALECTOV4_PULSEMINMAX)
-            return false;
+           return false;
          // humidity |= 0x0;
       }
    }
