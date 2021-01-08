@@ -10,9 +10,23 @@
 
 #include "RFLink.h"
 
+#ifndef ESP8266
 // local AP
 String WIFI_SSID = "67 Bonacres";
 String WIFI_PSWD = "brownieg";
+#else
+#include <ESP8266WiFiMulti.h>
+void _AddAccessPoint(ESP8266WiFiMulti *wifiMulti, char *SSID, char *PWD)
+{
+    Serial.println("Wifi Access : " + String(SSID));
+    wifiMulti->addAP(SSID, PWD);
+}
+void AddAccessPoints(ESP8266WiFiMulti *wifiMulti)
+{
+    _AddAccessPoint(wifiMulti, "67 Bonacres", "brownieg");
+    _AddAccessPoint(wifiMulti, "The_Beach", "brownieg");
+}
+#endif
 
 // DHCP or Static IP
 #define USE_DHCP

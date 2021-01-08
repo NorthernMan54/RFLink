@@ -12,13 +12,15 @@
 #include "6_WiFi_MQTT.h"
 #include "6_Credentials.h"
 #ifdef ARDUINO_OTA
-  #include <ArduinoOTA.h>
+#include <ArduinoOTA.h>
 #endif
 
 #ifdef ESP32
 #include <WiFi.h>
 #elif ESP8266
 #include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+ESP8266WiFiMulti wifiMulti;
 #endif
 
 #ifdef MQTT_ENABLED
@@ -68,7 +70,7 @@ void setup_WIFI()
 void start_WIFI()
 {
   WiFi.mode(WIFI_STA);
-
+#ifndef ESP8266
   // We start by connecting to a WiFi network
   Serial.print(F("WiFi SSID :\t\t"));
   Serial.println(WIFI_SSID.c_str());
@@ -76,9 +78,13 @@ void start_WIFI()
   WiFi.begin(WIFI_SSID.c_str(), WIFI_PSWD.c_str());
 
   while (WiFi.status() != WL_CONNECTED)
+#else
+  AddAccessPoints(&wifiMulti);
+  while (wifiMulti.run() != WL_CONNECTED)
+#endif
   {
-    delay(500);
     Serial.print(".");
+    delay(500);
   }
 
   Serial.println(F("Established"));
@@ -86,8 +92,10 @@ void start_WIFI()
   Serial.println(WiFi.localIP());
   Serial.print(F("WiFi RSSI :\t\t"));
   Serial.println(WiFi.RSSI());
+  Serial.print(F("WiFi SSID :\t\t"));
+  Serial.println(WiFi.SSID());
 
-  #ifdef ARDUINO_OTA
+#ifdef ARDUINO_OTA
   ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH)
@@ -119,7 +127,7 @@ void start_WIFI()
   });
   Serial.println(F("Arduino OTA :\t\tEnabled"));
   ArduinoOTA.begin();
-  #endif
+#endif
 }
 
 void stop_WIFI()
@@ -238,9 +246,9 @@ void checkMQTTloop()
     MQTTClient.loop();
     lastCheck = millis();
   }
-  #ifdef ARDUINO_OTA
+#ifdef ARDUINO_OTA
   ArduinoOTA.handle();
-  #endif
+#endif
 }
 
 #else // MQTT_ENABLED
