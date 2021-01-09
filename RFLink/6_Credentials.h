@@ -40,14 +40,14 @@ String WIFI_SUBNET = "255.255.255.0";
 // MQTT Server
 String MQTT_SERVER = "mqtt.local";
 String MQTT_PORT = "1883";
-String MQTT_ID = "ESP8266-RFLink_001";
+// String MQTT_ID = "ESP8266-RFLink_002";   // Set to device name
 String MQTT_USER = "xxx";
 String MQTT_PSWD = "xxx";
 
-// MQTT Topic
-String MQTT_TOPIC_OUT = "RFLink/msg";
-String MQTT_TOPIC_IN = "RFLink/cmd";
-String MQTT_TOPIC_LWT = "RFLink/lwt";
+// MQTT Topic will be prepended with device name
+String MQTT_TOPIC_OUT = "/msg";
+String MQTT_TOPIC_IN = "/cmd";
+String MQTT_TOPIC_LWT = "/lwt";
 
 #ifdef CHECK_CACERT
 static const char ca_cert[] PROGMEM = R"EOF(

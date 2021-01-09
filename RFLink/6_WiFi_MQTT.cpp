@@ -50,6 +50,11 @@ void callback(char *, byte *, unsigned int);
 
 static String WIFI_PWR = String(WIFI_PWR_0);
 
+String deviceName;
+String MQTT_TOPIC_OUT_STUB;
+String MQTT_TOPIC_IN_STUB;
+String MQTT_TOPIC_LWT_STUB;
+
 void setup_WIFI()
 {
   WiFi.persistent(false);
@@ -95,7 +100,16 @@ void start_WIFI()
   Serial.print(F("WiFi SSID :\t\t"));
   Serial.println(WiFi.SSID());
 
+  String _Mac;
+  _Mac = String(WiFi.macAddress());
+  deviceName = "rflink-" + _Mac.substring(9, 11) + _Mac.substring(12, 14) + _Mac.substring(15);
+
+  Serial.print(F("deviceName :\t\t"));
+  Serial.println(deviceName);
+  Serial.println(); 
+
 #ifdef ARDUINO_OTA
+  ArduinoOTA.setHostname(deviceName.c_str());
   ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH)
@@ -126,6 +140,9 @@ void start_WIFI()
       Serial.println("End Failed");
   });
   Serial.println(F("Arduino OTA :\t\tEnabled"));
+  Serial.print(F("OTA Hostname:\t\t"));
+  Serial.print(ArduinoOTA.getHostname());
+  Serial.println(".local"); 
   ArduinoOTA.begin();
 #endif
 }
@@ -155,10 +172,16 @@ void setup_MQTT()
   Serial.println(F("Not Set"));
 #endif //SSL
 
+  MQTT_TOPIC_OUT_STUB = deviceName + MQTT_TOPIC_OUT;
+  MQTT_TOPIC_IN_STUB = deviceName + MQTT_TOPIC_IN;
+  MQTT_TOPIC_LWT_STUB = deviceName + MQTT_TOPIC_LWT;
+
   MQTTClient.setClient(WIFIClient);
   MQTTClient.setServer(MQTT_SERVER.c_str(), MQTT_PORT.toInt());
   MQTTClient.setCallback(callback);
   bResub = true;
+
+
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -185,26 +208,33 @@ void reconnect()
 
 #ifdef MQTT_LWT
 #ifdef ESP32
-    if (MQTTClient.connect(MQTT_ID.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str(), (MQTT_TOPIC_LWT).c_str(), 2, true, PSTR("Offline")))
+    if (MQTTClient.connect(deviceName.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str(), (MQTT_TOPIC_LWT_STUB).c_str(), 2, true, PSTR("Offline")))
 #elif ESP8266
-    if (MQTTClient.connect(MQTT_ID.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str(), (MQTT_TOPIC_LWT).c_str(), 2, true, "Offline"))
+    if (MQTTClient.connect(deviceName.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str(), (MQTT_TOPIC_LWT_STUB).c_str(), 2, true, "Offline"))
 #endif // ESP
 #else  // MQTT_LWT
-    if (MQTTClient.connect(MQTT_ID.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str()))
+    if (MQTTClient.connect(deviceName.c_str(), MQTT_USER.c_str(), MQTT_PSWD.c_str()))
 #endif // MQTT_LWT
     {
       Serial.println(F("Established"));
       Serial.print(F("MQTT ID :\t\t"));
-      Serial.println(MQTT_ID.c_str());
+      Serial.println(deviceName.c_str());
       Serial.print(F("MQTT Username :\t\t"));
       Serial.println(MQTT_USER.c_str());
+      Serial.print(F("MQTT IN :\t\t"));
+      Serial.println(MQTT_TOPIC_IN_STUB.c_str());
+      Serial.print(F("MQTT OUT :\t\t"));
+      Serial.println(MQTT_TOPIC_OUT_STUB.c_str());
 #ifdef MQTT_LWT
 #ifdef ESP32
-      MQTTClient.publish((MQTT_TOPIC_LWT).c_str(), PSTR("Online"), true);
+      MQTTClient.publish((MQTT_TOPIC_LWT_STUB).c_str(), PSTR("Online"), true);
 #elif ESP8266
-      MQTTClient.publish((MQTT_TOPIC_LWT).c_str(), "Online", true);
+      MQTTClient.publish((MQTT_TOPIC_LWT_STUB).c_str(), "Online", true);
 #endif // ESP
+      Serial.print(F("MQTT LWT :\t\t"));
+      Serial.println(MQTT_TOPIC_LWT_STUB.c_str());
 #endif // MQTT_LWT
+Serial.println(); 
     }
     else
     {
@@ -224,7 +254,7 @@ void publishMsg()
 
   if (!MQTTClient.connected())
     reconnect();
-  MQTTClient.publish(MQTT_TOPIC_OUT.c_str(), pbuffer, MQTT_RETAINED);
+  MQTTClient.publish(MQTT_TOPIC_OUT_STUB.c_str(), pbuffer, MQTT_RETAINED);
 }
 
 void checkMQTTloop()
@@ -239,7 +269,7 @@ void checkMQTTloop()
     if (bResub)
     {
       // Once connected, resubscribe
-      MQTTClient.subscribe(MQTT_TOPIC_IN.c_str());
+      MQTTClient.subscribe(MQTT_TOPIC_IN_STUB.c_str());
       bResub = false;
       delay(10);
     }

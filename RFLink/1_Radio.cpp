@@ -180,6 +180,7 @@ void show_Radio_Pin()
     Serial.print(F("Radio pin RF_TX_NA :\t"));
     Serial.println(GPIO2String(PIN_RF_TX_NA));
   }
+  Serial.println();
 }
 #endif // ESP8266 || ESP32
 
