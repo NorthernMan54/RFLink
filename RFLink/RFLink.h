@@ -9,7 +9,7 @@
 #define RFLink_h
 
 #define BUILDNR 0x05 // 0x07       // shown in version
-#define REVNR 0x01   // 0X42       // shown in version and startup string
+#define REVNR 0x02   // 0X42       // shown in version and startup string
 
 #define SERIAL_ENABLED // Send RFLink messages over Serial
 
@@ -21,8 +21,6 @@
 
 // WIFI
 #define WIFI_PWR_0 20 // 0~20.5dBm
-
-#define ARDUINO_OTA true
 
 // MQTT messages
 #define MQTT_ENABLED          // Send RFLink messages over MQTT
@@ -38,6 +36,9 @@
 #define QRFDebug_0 false  // debug RF signals with plugin 001 but no multiplication (faster?, compact)
 #define RFUDebug_0 false  // debug RF signals with plugin 254 (decode 1st)
 #define QRFUDebug_0 false // debug RF signals with plugin 254 but no multiplication (faster?, compact)
+
+// I2C Based Sensors
+#define I2C_SENSOR
 
 void CallReboot(void);
 

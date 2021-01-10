@@ -55,8 +55,19 @@ String MQTT_TOPIC_OUT_STUB;
 String MQTT_TOPIC_IN_STUB;
 String MQTT_TOPIC_LWT_STUB;
 
+bool ledState;
+void blink()
+{
+  digitalWrite(LED_BUILTIN, ledState);
+  ledState = !ledState;
+}
+
+Ticker Pairing(blink, 500); // changing led every 500ms
+
 void setup_WIFI()
 {
+  Pairing.start();
+  pinMode(LED_BUILTIN, OUTPUT);
   WiFi.persistent(false);
   WiFi.setAutoReconnect(true);
 #ifdef ESP32
@@ -88,6 +99,7 @@ void start_WIFI()
   while (wifiMulti.run() != WL_CONNECTED)
 #endif
   {
+    Pairing.update();
     Serial.print(".");
     delay(500);
   }
@@ -106,7 +118,7 @@ void start_WIFI()
 
   Serial.print(F("deviceName :\t\t"));
   Serial.println(deviceName);
-  Serial.println(); 
+  Serial.println();
 
 #ifdef ARDUINO_OTA
   ArduinoOTA.setHostname(deviceName.c_str());
@@ -142,7 +154,7 @@ void start_WIFI()
   Serial.println(F("Arduino OTA :\t\tEnabled"));
   Serial.print(F("OTA Hostname:\t\t"));
   Serial.print(ArduinoOTA.getHostname());
-  Serial.println(".local"); 
+  Serial.println(".local");
   ArduinoOTA.begin();
 #endif
 }
@@ -180,8 +192,6 @@ void setup_MQTT()
   MQTTClient.setServer(MQTT_SERVER.c_str(), MQTT_PORT.toInt());
   MQTTClient.setCallback(callback);
   bResub = true;
-
-
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -192,10 +202,12 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void reconnect()
 {
+  Pairing.start();
   bResub = true;
 
   while (!MQTTClient.connected())
   {
+    Pairing.update();
     if (WiFi.status() != WL_CONNECTED)
     {
       stop_WIFI();
@@ -234,10 +246,12 @@ void reconnect()
       Serial.print(F("MQTT LWT :\t\t"));
       Serial.println(MQTT_TOPIC_LWT_STUB.c_str());
 #endif // MQTT_LWT
-Serial.println(); 
+      Serial.println();
+      Pairing.stop();
     }
     else
     {
+      Pairing.update();
       Serial.print(F("Failed - rc="));
       Serial.println(MQTTClient.state());
       Serial.println(F("MQTT Retry :\tTry again in 5 seconds"));
@@ -250,11 +264,13 @@ Serial.println();
 
 void publishMsg()
 {
+  Pairing.start();
   static boolean MQTT_RETAINED = MQTT_RETAINED_0;
 
   if (!MQTTClient.connected())
     reconnect();
   MQTTClient.publish(MQTT_TOPIC_OUT_STUB.c_str(), pbuffer, MQTT_RETAINED);
+  Pairing.stop();
 }
 
 void checkMQTTloop()
