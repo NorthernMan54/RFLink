@@ -36,7 +36,7 @@
 // Debug default
 #define RFDebug_0 false   // debug RF signals with plugin 001 (no decode)
 #define QRFDebug_0 false  // debug RF signals with plugin 001 but no multiplication (faster?, compact)
-#define RFUDebug_0 true  // debug RF signals with plugin 254 (decode 1st)
+#define RFUDebug_0 false  // debug RF signals with plugin 254 (decode 1st)
 #define QRFUDebug_0 false // debug RF signals with plugin 254 but no multiplication (faster?, compact)
 
 void CallReboot(void);
