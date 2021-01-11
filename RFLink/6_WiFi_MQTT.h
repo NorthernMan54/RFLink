@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 #include "RFLink.h"
+#include "Ticker.h"
 
 #ifdef ESP32
 #include <WiFi.h>

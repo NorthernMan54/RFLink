@@ -26,6 +26,10 @@
 #include "6_WiFi_MQTT.h"
 #include "8_OLED.h"
 
+#ifdef I2C_SENSOR
+#include "9_I2C_Sensor.h"
+#endif
+
 #if (defined(__AVR_ATmega328P__) || defined(__AVR_ATmega2560__))
 #include <avr/power.h>
 #endif
@@ -97,6 +101,10 @@ void setup()
   PluginTXInit();
   set_Radio_mode(Radio_OFF);
 
+#ifdef I2C_SENSOR
+  I2CSensorSetup();
+#endif
+
 #if ((defined(ESP8266) || defined(ESP32)) && !defined(RFM69_ENABLED))
   show_Radio_Pin();
 #endif // ESP8266 || ESP32
@@ -137,6 +145,11 @@ void loop()
 #endif
   if (ScanEvent())
     sendMsg();
+    
+#ifdef I2C_SENSOR
+  if (I2CSensorLoop())
+    sendMsg();
+#endif
 }
 
 void sendMsg()

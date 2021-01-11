@@ -38,7 +38,7 @@ extern boolean PULLUP_RF_RX_DATA;
 #ifdef ESP8266
 // ESP8266 D1 Mini
 #define PIN_RF_RX_PMOS_0 NOT_A_PIN // High Side P-MOSFET, active on LOW level
-#define PIN_RF_RX_NMOS_0 D5        // Low Side N-MOSFET, active on HIGH level
+#define PIN_RF_RX_NMOS_0 D2        // Low Side N-MOSFET, active on HIGH level
 #define PIN_RF_RX_VCC_0 NOT_A_PIN  // Power to the receiver on this pin
 #define PIN_RF_RX_GND_0 NOT_A_PIN  // Ground to the receiver on this pin
 #define PIN_RF_RX_NA_0 NOT_A_PIN   // Alt. RX_DATA. Forced as input
