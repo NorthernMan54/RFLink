@@ -102,7 +102,12 @@ void start_WIFI()
 
   String _Mac;
   _Mac = String(WiFi.macAddress());
-  deviceName = "rflink-" + _Mac.substring(9, 11) + _Mac.substring(12, 14) + _Mac.substring(15);
+  #ifdef Gateway_Name
+    deviceName = Gateway_Name;
+  #else
+    deviceName = "rflink-" + _Mac.substring(9, 11) + _Mac.substring(12, 14) + _Mac.substring(15);
+  #endif
+  
 
   Serial.print(F("deviceName :\t\t"));
   Serial.println(deviceName);

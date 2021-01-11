@@ -1,6 +1,7 @@
 .pio
 .vscode
 .gitignore
+*_env.ini
 pictures/Full size/
 
 RFLink/6_Credentials.h
