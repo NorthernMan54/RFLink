@@ -38,7 +38,13 @@
 #define QRFUDebug_0 false // debug RF signals with plugin 254 but no multiplication (faster?, compact)
 
 // I2C Based Sensors
-#define I2C_SENSOR
+#ifndef I2C_SENSOR
+// #define I2C_SENSOR  // uncomment to enable I2C Based Sensors
+#endif 
+
+#ifndef ARDUINO_OTA
+// #define ARDUINO_OTA // uncomment to enable OTA Updates
+#endif
 
 void CallReboot(void);
 
