@@ -46,6 +46,10 @@
 // #define ARDUINO_OTA // uncomment to enable OTA Updates
 #endif
 
+#ifdef ESP32
+#define LED_BUILTIN 2
+#endif
+
 void CallReboot(void);
 
 #endif

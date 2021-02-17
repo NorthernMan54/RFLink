@@ -15,8 +15,8 @@
 #define PIN_I2C_SCL D5        // I2C SCL GPIO14
 #define PIN_I2C_SDA D6        // I2C SDA GPIO12
 #elif ESP32
-#define PIN_OLED_SCL 22        // I2C SCL
-#define PIN_OLED_SDA 21        // I2C SDA
+#define PIN_I2C_SCL 22        // I2C SCL
+#define PIN_I2C_SDA 21        // I2C SDA
 #endif
 
 #define I2C_ADDRESS 0x76        // I2C Address

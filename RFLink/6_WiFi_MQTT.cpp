@@ -189,9 +189,9 @@ void setup_MQTT()
   Serial.println(F("Not Set"));
 #endif //SSL
 
-  MQTT_TOPIC_OUT_STUB = deviceName + MQTT_TOPIC_OUT;
-  MQTT_TOPIC_IN_STUB = deviceName + MQTT_TOPIC_IN;
-  MQTT_TOPIC_LWT_STUB = deviceName + MQTT_TOPIC_LWT;
+  MQTT_TOPIC_OUT_STUB = "rflink/" + deviceName + MQTT_TOPIC_OUT;
+  MQTT_TOPIC_IN_STUB = "rflink/" + deviceName + MQTT_TOPIC_IN;
+  MQTT_TOPIC_LWT_STUB = "rflink/" + deviceName + MQTT_TOPIC_LWT;
 
   MQTTClient.setClient(WIFIClient);
   MQTTClient.setServer(MQTT_SERVER.c_str(), MQTT_PORT.toInt());
